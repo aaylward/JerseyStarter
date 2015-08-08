@@ -9,8 +9,8 @@ import java.net.URI;
 public class JerseyStarter {
   private final Server server;
 
-  public static JerseyStarter newJerseyStarter(int port) {
-    return new JerseyStarter(port);
+  public static JerseyStarter newJerseyStarter(JerseyStarterConfiguration configuration) {
+    return new JerseyStarter(configuration);
   }
 
   public void run() throws Exception {
@@ -18,13 +18,14 @@ public class JerseyStarter {
   }
 
   public static void main(String... args) throws Exception {
-    newJerseyStarter(8080).run();
+    JerseyStarterConfiguration configuration = new JerseyStarterConfiguration(8080, JerseyStarter.class.getPackage());
+    newJerseyStarter(configuration).run();
   }
 
-  private JerseyStarter(int port) {
+  private JerseyStarter(JerseyStarterConfiguration configuration) {
     JerseyStarterApplication application = JerseyStarterApplication
-        .newStarterApplication(JerseyStarter.class.getPackage());
-    URI baseUri = UriBuilder.fromUri("http://localhost/").port(port).build();
+        .newStarterApplication(configuration.getBasePackage());
+    URI baseUri = UriBuilder.fromUri("http://localhost/").port(configuration.getPort()).build();
     server = JettyHttpContainerFactory.createServer(baseUri, application);
   }
 }

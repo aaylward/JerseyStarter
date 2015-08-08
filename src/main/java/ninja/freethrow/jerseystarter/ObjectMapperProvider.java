@@ -11,7 +11,7 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
   final ObjectMapper defaultObjectMapper;
 
   public ObjectMapperProvider() {
-    this.defaultObjectMapper = createDefaultMapper();
+    defaultObjectMapper = createDefaultMapper();
   }
 
   @Override
@@ -20,8 +20,7 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
   }
 
   private static ObjectMapper createDefaultMapper() {
-    final ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    return mapper;
+    return new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 }
