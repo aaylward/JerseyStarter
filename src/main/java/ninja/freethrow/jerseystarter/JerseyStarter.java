@@ -7,12 +7,26 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class JerseyStarter {
-  public static void main(String... args) throws Exception {
-    URI baseUri = UriBuilder.fromUri("http://localhost/").port(8080).build();
+  private int port;
+  private Server server;
+
+  public static JerseyStarter newJerseyStarter(int port) {
+    return new JerseyStarter(port);
+  }
+
+  public void run() throws Exception {
     JerseyStarterApplication application = JerseyStarterApplication
         .newStarterApplication(JerseyStarter.class.getPackage());
+    URI baseUri = UriBuilder.fromUri("http://localhost/").port(port).build();
+    server = JettyHttpContainerFactory.createServer(baseUri, application);
+    server.start();
+  }
 
-    Server jettyServer = JettyHttpContainerFactory.createServer(baseUri, application);
-    jettyServer.start();
+  public static void main(String... args) throws Exception {
+    newJerseyStarter(8080).run();
+  }
+
+  private JerseyStarter(int port) {
+    this.port = port;
   }
 }
