@@ -16,8 +16,12 @@ public class JerseyStarter {
   }
 
   public void run() throws Exception {
+    server.start();
+  }
+
+  public void stop() throws Exception {
     try {
-      server.start();
+      server.stop();
     } finally {
       server.destroy();
     }

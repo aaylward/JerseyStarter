@@ -54,6 +54,23 @@
       <version>2.5.1</version>
     </dependency>
     <dependency>
+      <groupId>com.hubspot</groupId>
+      <artifactId>HorizonApache</artifactId>
+      <version>0.0.13</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
