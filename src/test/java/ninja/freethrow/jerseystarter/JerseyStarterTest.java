@@ -6,9 +6,9 @@ import com.hubspot.horizon.HttpRequest.ContentType;
 import com.hubspot.horizon.HttpRequest.Method;
 import com.hubspot.horizon.HttpResponse;
 import com.hubspot.horizon.apache.ApacheHttpClient;
+import ninja.freethrow.jerseystarter.resources.JSONResource.MyThing;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -35,9 +35,8 @@ public class JerseyStarterTest {
   }
 
   @Test
-  @Ignore
   public void itCanServeRequests() {
-    String uri = String.format("http://localhost:%d/%s/this-is-nice", TEST_PORT, BASE_PATH.get());
+    String uri = String.format("http://localhost:%d/this-is-nice", TEST_PORT);
     HttpRequest request = HttpRequest.newBuilder()
         .setUrl(uri)
         .setMethod(Method.GET)
@@ -46,5 +45,20 @@ public class JerseyStarterTest {
     HttpResponse response = HTTP.execute(request);
     assertThat(response.getStatusCode()).isEqualTo(200);
     assertThat(response.getAsString()).isEqualTo("Hello");
+  }
+
+  @Test
+  public void itCanServeJSON() {
+    MyThing expected = new MyThing("bop");
+    String uri = String.format("http://localhost:%d/gimme-json", TEST_PORT);
+    HttpRequest request = HttpRequest.newBuilder()
+        .setUrl(uri)
+        .setQueryParam("name").to("bop")
+        .setMethod(Method.GET)
+        .setAccept(ContentType.JSON)
+        .build();
+    HttpResponse response = HTTP.execute(request);
+    assertThat(response.getStatusCode()).isEqualTo(200);
+    assertThat(response.getAs(MyThing.class)).isEqualTo(expected);
   }
 }

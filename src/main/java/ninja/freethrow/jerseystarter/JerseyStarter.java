@@ -2,11 +2,14 @@ package ninja.freethrow.jerseystarter;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public class JerseyStarter {
+  private static final Logger LOG = LoggerFactory.getLogger(JerseyStarter.class);
   private static final String BASE_URI_FORMAT = "http://localhost/%s";
 
   private final Server server;
@@ -16,6 +19,7 @@ public class JerseyStarter {
   }
 
   public void run() throws Exception {
+    LOG.info("vroom! vroom!");
     server.start();
   }
 
@@ -23,14 +27,17 @@ public class JerseyStarter {
     try {
       server.stop();
     } finally {
-      server.destroy();
+      if (server != null) {
+        server.destroy();
+      }
+      LOG.info("kthxbye");
     }
   }
 
   public JerseyStarter(Configuration configuration) {
     URI baseUri = buildUri(configuration);
     JerseyStarterApplication application = buildApplication(configuration);
-    server = JettyHttpContainerFactory.createServer(baseUri, application);
+    server = JettyHttpContainerFactory.createServer(baseUri, application, false);
   }
 
   private URI buildUri(Configuration configuration) {
