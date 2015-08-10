@@ -60,35 +60,22 @@ public class JerseyStarterApplication extends ResourceConfig {
 
   private Server build(Configuration configuration) throws MalformedURLException {
     final Server server = buildServer(configuration);
-
-    ServletContextHandler servletContextHandler = new ServletContextHandler(server, null, true, false);
-    servletContextHandler.setContextPath(configuration.getAppRoot().orElse("/"));
-
-    HandlerList handlers = new HandlerList();
-    handlers.addHandler(servletContextHandler);
-    ResourceHandler resourceHandler = new ResourceHandler();
-    resourceHandler.setBaseResource(Resource.newResource("."));
-    handlers.setHandlers(new Handler[]
-        {resourceHandler, new DefaultHandler()});
-
-    server.setHandler(handlers);
-    return server;
+    return addHandlers(server, configuration);
   }
-
 
   private Server buildServer(Configuration configuration) {
     final URI baseUri = buildUri(configuration);
-    final Server server = JettyHttpContainerFactory.createServer(baseUri, this, false);
-    configureErrorHandlers(server, configuration);
-    return server;
+    return JettyHttpContainerFactory.createServer(baseUri, this, false);
   }
 
-  private void configureErrorHandlers(Server server, Configuration configuration) {
-    final ErrorHandler errorHandler = new ErrorHandler();
-    errorHandler.setServer(server);
-    errorHandler.setShowStacks(false);
-    server.addBean(errorHandler);
-    server.setStopAtShutdown(true);
-    server.setStopTimeout(configuration.getShutdownGracePeriod());
+  private Server addHandlers(Server server, Configuration configuration) throws MalformedURLException {
+    ServletContextHandler servletContextHandler = new ServletContextHandler(server, configuration.getAppRoot().orElse(""));
+
+    HandlerList handlers = new HandlerList();
+    handlers.setHandlers(new Handler[]
+        {servletContextHandler, new DefaultHandler()});
+
+    server.setHandler(handlers);
+    return server;
   }
 }
