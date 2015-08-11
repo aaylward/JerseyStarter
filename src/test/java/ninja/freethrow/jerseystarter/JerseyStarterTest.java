@@ -30,7 +30,7 @@ public class JerseyStarterTest extends JerseyStarterApplication {
   @Test
   @Ignore
   public void itCanServeRequests() {
-    String uri = String.format("http://localhost:%d/this-is-nice", TEST_PORT);
+    String uri = String.format("http://localhost:%d/test/this-is-nice", TEST_PORT);
     HttpRequest request = HttpRequest.newBuilder()
         .setUrl(uri)
         .setMethod(Method.GET)

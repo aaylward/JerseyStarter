@@ -3,11 +3,8 @@ package ninja.freethrow.jerseystarter;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -59,13 +56,9 @@ public class JerseyStarterApplication extends ResourceConfig {
   }
 
   private Server build(Configuration configuration) throws MalformedURLException {
-    final Server server = buildServer(configuration);
-    return addHandlers(server, configuration);
-  }
-
-  private Server buildServer(Configuration configuration) {
     final URI baseUri = buildUri(configuration);
-    return JettyHttpContainerFactory.createServer(baseUri, this, false);
+    Server server = JettyHttpContainerFactory.createServer(baseUri, this, false);
+    return addHandlers(server, configuration);
   }
 
   private Server addHandlers(Server server, Configuration configuration) throws MalformedURLException {
