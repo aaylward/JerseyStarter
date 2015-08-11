@@ -1,26 +1,51 @@
 package ninja.freethrow.jerseystarter;
 
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-
 public class JerseyStarter {
   private static final Logger LOG = LoggerFactory.getLogger(JerseyStarter.class);
-  private static final String BASE_URI_FORMAT = "http://localhost/%s";
 
-  private final Server server;
+  private Server server;
+  private Configuration configuration;
+  private JerseyStarterResourceConfiguration jersey;
 
-  public static JerseyStarter newJerseyStarter(Configuration configuration) {
-    return new JerseyStarter(configuration);
+  public static JerseyStarter newStarterApp(Configuration configuration) {
+    JerseyStarterResourceConfiguration jersey = new JerseyStarterResourceConfiguration()
+        .configure(configuration);
+    return new JerseyStarter(configuration, jersey);
+  }
+
+  public JerseyStarter(Configuration configuration, JerseyStarterResourceConfiguration jersey) {
+    this.configuration = configuration;
+    this.jersey = jersey;
+  }
+
+  public JerseyStarter buildServer() {
+    server = new Server(configuration.getPort());
+
+    ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    contextHandler.setContextPath(configuration.getAppRoot().orElse("/"));
+
+    server.setHandler(contextHandler);
+    contextHandler.addServlet(new ServletHolder(new ServletContainer(jersey)), "/*");
+    return this;
   }
 
   public void run() throws Exception {
+    run(true);
+  }
+
+  public void run(boolean join) throws Exception {
     LOG.info("vroom! vroom!");
     server.start();
+    if (join) {
+      server.join();
+    }
   }
 
   public void stop() throws Exception {
@@ -32,22 +57,5 @@ public class JerseyStarter {
       }
       LOG.info("kthxbye");
     }
-  }
-
-  public JerseyStarter(Configuration configuration) {
-    URI baseUri = buildUri(configuration);
-    JerseyStarterApplication application = buildApplication(configuration);
-    server = JettyHttpContainerFactory.createServer(baseUri, application, false);
-  }
-
-  private URI buildUri(Configuration configuration) {
-    return UriBuilder
-        .fromUri(String.format(BASE_URI_FORMAT, configuration.getAppRoot().orElse("")))
-        .port(configuration.getPort())
-        .build();
-  }
-
-  private JerseyStarterApplication buildApplication(Configuration configuration) {
-    return JerseyStarterApplication.newStarterApplication(configuration.getBasePackage());
   }
 }
