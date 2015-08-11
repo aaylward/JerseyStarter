@@ -4,8 +4,12 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JerseyStarter {
+  private static final Logger LOG = LoggerFactory.getLogger(JerseyStarter.class);
+
   private Server server;
   private Configuration configuration;
   private JerseyStarterResourceConfiguration jersey;
@@ -37,6 +41,7 @@ public class JerseyStarter {
   }
 
   public void run(boolean join) throws Exception {
+    LOG.info("vroom! vroom!");
     server.start();
     if (join) {
       server.join();
@@ -50,6 +55,7 @@ public class JerseyStarter {
       if (server != null) {
         server.destroy();
       }
+      LOG.info("kthxbye");
     }
   }
 }
