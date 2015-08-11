@@ -20,8 +20,7 @@ public class JerseyStarterTest {
   private static final int TEST_PORT = 8090;
   private static final Configuration config = new Configuration(TEST_PORT,
         JerseyStarterTest.class.getPackage(),
-        Optional.of(APP_ROOT),
-        0);
+        Optional.of(APP_ROOT));
   private static final JerseyStarter jersey = JerseyStarter.newStarterApp(config).buildServer();
   private static final HttpClient HTTP = new ApacheHttpClient();
 
