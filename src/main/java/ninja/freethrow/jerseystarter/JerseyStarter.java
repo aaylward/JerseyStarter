@@ -26,7 +26,7 @@ public class JerseyStarter {
   public JerseyStarter(StartupConfiguration configuration) {
     this.port = configuration.getPort();
     this.contextPath = configuration.getContextPath().orElse(DEFAULT_CONTEXT_PATH);
-    this.jersey = buildResourceConfig(configuration.getBasePackage());
+    this.jersey = buildResourceConfigWithBasePackage(configuration.getBasePackage());
     buildServer();
   }
 
@@ -63,7 +63,7 @@ public class JerseyStarter {
     contextHandler.addServlet(new ServletHolder(new ServletContainer(jersey)), DEFAULT_SERVLET_PATH_SPEC);
   }
 
-  private ResourceConfig buildResourceConfig(Package basePackage) {
+  private ResourceConfig buildResourceConfigWithBasePackage(Package basePackage) {
     return new ResourceConfig()
         .packages(basePackage.getName())
         .register(ObjectMapperProvider.class)
