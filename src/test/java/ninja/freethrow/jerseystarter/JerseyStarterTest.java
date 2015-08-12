@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JerseyStarterTest {
   private static final String APP_ROOT = "/testing-is-fun";
   private static final int TEST_PORT = 8090;
-  private static final JerseyStarter SERVICE = new JerseyStarter();
+  private static Service SERVICE;
   private static final HttpClient HTTP = new ApacheHttpClient();
 
   @BeforeClass
@@ -25,10 +25,8 @@ public class JerseyStarterTest {
     System.setProperty(StartupConfiguration.PORT_PROPERTY_NAME, String.valueOf(TEST_PORT));
     System.setProperty(StartupConfiguration.CONTEXT_PATH_PROPERTY_NAME, APP_ROOT);
 
-    StartupConfiguration configuration = StartupConfiguration
-        .fromEnvWithBasePackage(JerseyStarterTest.class.getPackage());
-
-    SERVICE.configure(configuration).run(false);
+    SERVICE = Service.buildService(JerseyStarterTest.class.getPackage());
+    SERVICE.run(false);
   }
 
   @AfterClass
