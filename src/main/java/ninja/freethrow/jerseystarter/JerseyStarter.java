@@ -31,26 +31,33 @@ public class JerseyStarter implements Service {
   }
 
   @Override
-  public void run() throws Exception {
+  public void run() {
     run(true);
   }
 
   @Override
-  public void run(boolean join) throws Exception {
+  public void run(boolean join) {
     LOG.info("vroom! vroom!");
-    server.start();
-    if (join) {
-      server.join();
+    try {
+      server.start();
+      if (join) {
+        server.join();
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void stop() throws Exception {
+  public void stop() {
     try {
       server.stop();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     } finally {
       if (server != null) {
         server.destroy();
+        server = null;
       }
       LOG.info("kthxbye");
     }

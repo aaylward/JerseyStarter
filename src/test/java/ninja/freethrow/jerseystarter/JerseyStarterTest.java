@@ -17,19 +17,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JerseyStarterTest {
   private static final String APP_ROOT = "/testing-is-fun";
   private static final int TEST_PORT = 8090;
-  private static final StartupConfiguration CONFIG = new StartupConfiguration(TEST_PORT,
-        JerseyStarterTest.class.getPackage(),
-        APP_ROOT);
   private static final JerseyStarter SERVICE = new JerseyStarter();
   private static final HttpClient HTTP = new ApacheHttpClient();
 
   @BeforeClass
-  public static void setup() throws Exception {
-    SERVICE.configure(CONFIG).run(false);
+  public static void setup() {
+    System.setProperty(StartupConfiguration.PORT_PROPERTY_NAME, String.valueOf(TEST_PORT));
+    System.setProperty(StartupConfiguration.CONTEXT_PATH_PROPERTY_NAME, APP_ROOT);
+
+    StartupConfiguration configuration = StartupConfiguration
+        .fromEnvWithBasePackage(JerseyStarterTest.class.getPackage());
+
+    SERVICE.configure(configuration).run(false);
   }
 
   @AfterClass
-  public static void cleanup() throws Exception {
+  public static void cleanup() {
     SERVICE.stop();
   }
 
