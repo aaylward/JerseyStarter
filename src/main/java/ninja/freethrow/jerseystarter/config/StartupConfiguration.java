@@ -36,9 +36,17 @@ public class StartupConfiguration {
     return contextPathMaybe;
   }
 
+  private static String findProperty(String propertyName) {
+    String property = System.getProperty(propertyName);
+    if (property == null) {
+      property = System.getenv(propertyName);
+    }
+    return property;
+  }
+
   private static Integer parsePropertyAsInteger(String propertyName) {
     try {
-      return Integer.parseInt(System.getProperty(propertyName));
+      return Integer.parseInt(findProperty(propertyName));
     } catch (NumberFormatException n) {
       throw new RuntimeException(n);
     }
