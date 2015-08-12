@@ -11,17 +11,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JerseyStarterTest {
   private static final String APP_ROOT = "/testing-is-fun";
   private static final int TEST_PORT = 8090;
-  private static final Configuration config = new Configuration(TEST_PORT,
+  private static final StartupConfiguration config = new StartupConfiguration(TEST_PORT,
         JerseyStarterTest.class.getPackage(),
-        Optional.of(APP_ROOT));
-  private static final JerseyStarter jersey = JerseyStarter.newStarterApp(config).buildServer();
+        APP_ROOT);
+  private static final JerseyStarter jersey = JerseyStarter.newStarterApp(config);
   private static final HttpClient HTTP = new ApacheHttpClient();
 
   @BeforeClass
