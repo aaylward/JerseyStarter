@@ -6,6 +6,7 @@ import com.hubspot.horizon.HttpRequest.ContentType;
 import com.hubspot.horizon.HttpRequest.Method;
 import com.hubspot.horizon.HttpResponse;
 import com.hubspot.horizon.apache.ApacheHttpClient;
+import ninja.freethrow.jerseystarter.config.StartupConfiguration;
 import ninja.freethrow.jerseystarter.resources.JSONResource.MyThing;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,20 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JerseyStarterTest {
   private static final String APP_ROOT = "/testing-is-fun";
   private static final int TEST_PORT = 8090;
-  private static final StartupConfiguration config = new StartupConfiguration(TEST_PORT,
+  private static final StartupConfiguration CONFIG = new StartupConfiguration(TEST_PORT,
         JerseyStarterTest.class.getPackage(),
         APP_ROOT);
-  private static final JerseyStarter jersey = JerseyStarter.newStarterApp(config);
+  private static final JerseyStarter SERVICE = new JerseyStarter();
   private static final HttpClient HTTP = new ApacheHttpClient();
 
   @BeforeClass
   public static void setup() throws Exception {
-    jersey.run(false);
+    SERVICE.configure(CONFIG).run(false);
   }
 
   @AfterClass
   public static void cleanup() throws Exception {
-    jersey.stop();
+    SERVICE.stop();
   }
 
   @Test

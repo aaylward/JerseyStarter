@@ -1,4 +1,4 @@
-package ninja.freethrow.jerseystarter;
+package ninja.freethrow.jerseystarter.config;
 
 import java.util.Optional;
 

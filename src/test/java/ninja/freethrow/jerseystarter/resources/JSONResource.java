@@ -1,7 +1,5 @@
 package ninja.freethrow.jerseystarter.resources;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
