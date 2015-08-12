@@ -11,11 +11,12 @@ import org.slf4j.LoggerFactory;
 
 public class JerseyStarter {
   private static final Logger LOG = LoggerFactory.getLogger(JerseyStarter.class);
+  private static final String DEFAULT_CONTEXT_PATH = "/";
+  private static final String DEFAULT_SERVLET_PATH_SPEC = "/*";
 
   private Server server;
   private int port;
   private String contextPath;
-  private Package basePackage;
   private ResourceConfig jersey;
 
   public static JerseyStarter newStarterApp(StartupConfiguration configuration) {
@@ -24,9 +25,8 @@ public class JerseyStarter {
 
   public JerseyStarter(StartupConfiguration configuration) {
     this.port = configuration.getPort();
-    this.contextPath = configuration.getContextPath().orElse("/");
-    this.basePackage = configuration.getBasePackage();
-    this.jersey = buildResourceConfig(this.basePackage);
+    this.contextPath = configuration.getContextPath().orElse(DEFAULT_CONTEXT_PATH);
+    this.jersey = buildResourceConfig(configuration.getBasePackage());
     buildServer();
   }
 
@@ -60,7 +60,7 @@ public class JerseyStarter {
     contextHandler.setContextPath(contextPath);
 
     server.setHandler(contextHandler);
-    contextHandler.addServlet(new ServletHolder(new ServletContainer(jersey)), "/*");
+    contextHandler.addServlet(new ServletHolder(new ServletContainer(jersey)), DEFAULT_SERVLET_PATH_SPEC);
   }
 
   private ResourceConfig buildResourceConfig(Package basePackage) {

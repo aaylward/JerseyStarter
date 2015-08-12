@@ -5,14 +5,14 @@ import java.util.Optional;
 public class StartupConfiguration {
   private final int port;
   private final Package basePackage;
-  private Optional<String> contextPathMaybe = Optional.empty();
+  private Optional<String> contextPathMaybe;
 
   public StartupConfiguration(int port,
                               Package basePackage,
-                              Optional<String> contextPathMaybe) {
+                              String contextPath) {
     this.port = port;
     this.basePackage = basePackage;
-    this.contextPathMaybe = contextPathMaybe;
+    this.contextPathMaybe = Optional.ofNullable(contextPath);
   }
 
   public int getPort() {
