@@ -85,6 +85,11 @@
       <version>0.10</version>
     </dependency>
     <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.10</version>
+    </dependency>
+    <dependency>
       <groupId>com.hubspot</groupId>
       <artifactId>HorizonApache</artifactId>
       <version>0.0.13</version>
