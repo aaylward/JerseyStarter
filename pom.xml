@@ -16,8 +16,6 @@
 
   <properties>
     <basepom.check.skip-basic>true</basepom.check.skip-basic>
-    <dep.jetty.version>9.2.11.v20150529</dep.jetty.version>
-    <dep.slf4j.version>1.7.12</dep.slf4j.version>
   </properties>
 
   <dependencies>
