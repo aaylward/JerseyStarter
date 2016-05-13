@@ -20,7 +20,7 @@ public class StartupConfiguration {
 
   public static StartupConfiguration fromEnvWithBasePackage(Package basePackage) {
     Integer port = parsePropertyAsInteger(PORT_PROPERTY_NAME);
-    String appRoot = System.getProperty(CONTEXT_PATH_PROPERTY_NAME);
+    String appRoot = normalizeAppRoot(findProperty(CONTEXT_PATH_PROPERTY_NAME));
     return new StartupConfiguration(port, basePackage, appRoot);
   }
 
@@ -36,10 +36,25 @@ public class StartupConfiguration {
     return contextPathMaybe;
   }
 
+  private static String normalizeAppRoot(String rawAppRoot) {
+    if (rawAppRoot == null || "/".equals(rawAppRoot)) {
+      return "/";
+    }
+
+    if (rawAppRoot.startsWith("/")) {
+      return rawAppRoot;
+    }
+
+    return "/" + rawAppRoot;
+  }
+
   private static String findProperty(String propertyName) {
     String property = System.getProperty(propertyName);
     if (property == null) {
       property = System.getenv(propertyName);
+    }
+    if (property == null) {
+      throw new IllegalArgumentException("Couldn't find property: " + propertyName);
     }
     return property;
   }
@@ -48,7 +63,7 @@ public class StartupConfiguration {
     try {
       return Integer.parseInt(findProperty(propertyName));
     } catch (NumberFormatException n) {
-      throw new RuntimeException(n);
+      throw new RuntimeException("Failed to parse '" + propertyName + "' as an integer");
     }
   }
 }
