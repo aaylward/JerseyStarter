@@ -54,7 +54,7 @@ public class StartupConfiguration {
       property = System.getenv(propertyName);
     }
     if (property == null) {
-      throw new IllegalArgumentException("Couldn't find property: " + propertyName);
+      throw new RuntimeException("Couldn't find property: " + propertyName);
     }
     return property;
   }
